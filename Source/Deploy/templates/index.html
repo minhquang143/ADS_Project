@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Predict Football Player Value</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 0;
+      font-size: 14px;
+    }
+
+    .predict-form {
+      max-width: 400px;
+      margin: 40px auto;
+      padding: 20px 20px 0 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: violet;
+      text-align: center;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    input,
+    select,
+    button {
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: violet;
+      color: #fff;
+      cursor: pointer;
+      margin-bottom: 0;
+    }
+
+    button:hover {
+      background-color: #800080;
+    }
+
+    h4 {
+      color: violet;
+      text-align: center;
+      font-size: 25px;
+      margin-top: 5px;
+    }
+
+    .form-row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .form-row input {
+      width: calc(33.33% - 10px);
+    }
+
+    .select-row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .select-row select {
+      width: calc(50% - 10px);
+    }
+
+    .position-text {
+      margin-left: 10px;
+    }
+
+    .checkbox-row {
+      display: flex;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .checkbox-row input,
+    label {
+      width: calc(11% - 10px);
+    }
+
+    .button {
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="predict-form">
+    <h1>Price prediction</h1>
+    <form action="{{ url_for('predict')}}" method="post">
+      <div class="form-row">
+        <input type="text" name="Height" placeholder="Height" required="required" value="{{data[0] if data else ''}}" />
+        <input type="text" name="Weight" placeholder="Weight" required="required" value="{{data[1] if data else ''}}" />
+        <input type="text" name="Age" placeholder="Age" required="required" value="{{data[2] if data else ''}}" />
+      </div>
+      <div class="form-row">
+        <input type="text" name="OVR" placeholder="OVR" required="required" value="{{data[3] if data else ''}}" />
+        <input type="text" name="POT" placeholder="POT" required="required" value="{{data[4] if data else ''}}" />
+        <input type="text" name="Ball Skills" placeholder="Ball Skills" required="required"
+          value="{{data[5] if data else ''}}" />
+      </div>
+      <div class="form-row">
+        <input type="text" name="Defence" placeholder="Defence" required="required"
+          value="{{data[6] if data else ''}}" />
+        <input type="text" name="Mental" placeholder="Mental" required="required" value="{{data[7] if data else ''}}" />
+        <input type="text" name="Passing" placeholder="Passing" required="required"
+          value="{{data[8] if data else ''}}" />
+      </div>
+      <div class="form-row">
+        <input type="text" name="Physical" placeholder="Physical" required="required"
+          value="{{data[9] if data else ''}}" />
+        <input type="text" name="Shooting" placeholder="Shooting" required="required"
+          value="{{data[10] if data else ''}}" />
+        <input type="text" name="Goalkeeper" placeholder="Goalkeeper" required="required"
+          value="{{data[11] if data else ''}}" />
+      </div>
+
+      <div class="select-row">
+        <select name="League">
+          <option>League</option>
+          {% for item in league %}
+          <option value="{{item}}" {% if data and data[12]==item %}selected{% endif %}>{{ item }}</option>
+          {% endfor %}
+        </select>
+
+        <select name="Nation">
+          <option>Nation</option>
+          {% for item in nation %}
+          <option value="{{item}}" {% if data and data[13]==item %}selected{% endif %}>{{ item }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <p class="position-text">Preferred Positions</p>
+      <div class="checkbox-row">
+        {% if data %}
+        {% for item in position %}
+        <input type="checkbox" name="{{item}}" value="{{item}}" {% if data and item in data[14:] %}checked{% endif %} />
+        <label for="{{item}}">{{item}}</label>
+        {% endfor %}
+        {% else %}
+        {% for item in position %}
+        <input type="checkbox" name="{{item}}" value="{{item}}" />
+        <label for="{{item}}"> {{item}}</label>
+        {% endfor %}
+        {% endif %}
+
+      </div>
+      <p class="button">
+        <button type="submit" class="btn btn-primary btn-block btn-large">
+          Predict price
+        </button>
+      </p>
+      <h4>{{ prediction_text }}</h4>
+    </form>
+  </div>
+</body>
+
+</html>
